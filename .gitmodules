@@ -1,0 +1,3 @@
+[submodule "database"]
+	path = database
+	url = git@code.aliyun.com:jkwedu/jkwedu-database.git
