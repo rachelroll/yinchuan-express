@@ -84,7 +84,8 @@ class UserController extends Controller
         $grid->email('邮箱');
         $grid->mobile('手机号');
         $grid->nick_name('昵称');
-        $grid->avatar('头像');
+        $grid->avatar('头像')->image('',50);
+
         $grid->email_verified('邮箱验证');
         $grid->login_time('登录时间');
         $grid->login_ip('登录IP');
@@ -104,28 +105,23 @@ class UserController extends Controller
         $show = new Show(User::findOrFail($id));
 
         $show->id('Id');
-        $show->email('Email');
-        $show->mobile('Mobile');
-        $show->password('Password');
-        $show->nick_name('Nick name');
-        $show->title('Title');
-        $show->avatar('Avatar');
-        $show->point('Point');
-        $show->coin('Coin');
-        $show->email_verified('Email verified');
-        $show->login_time('Login time');
-        $show->login_ip('Login ip');
-        $show->new_message_num('New message num');
-        $show->new_notification_num('New notification num');
-        $show->created_ip('Created ip');
-        $show->invite_code('Invite code');
-        $show->register_type('Register type');
-        $show->register_way('Register way');
+        $show->email('邮箱');
+        $show->mobile('手机号');
+        $show->password('密码');
+        $show->name('姓名');
+        $show->nick_name('昵称');
+        $show->wechat_name('微信昵称');
+        $show->avatar('头像');
+        $show->email_verified('邮箱验证');
+        $show->login_time('登录时间');
+        $show->login_ip('登录IP');
+        $show->created_ip('创建IP');
+        $show->invite_code('邀请码');
+        $show->from_user_id('邀请人');
+        $show->register_type('注册来源');
+        $show->register_way('注册设备来源');
         $show->uuid('Uuid');
-        $show->uuid_type('Uuid type');
-        $show->remember_token('Remember token');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
+        $show->uuid_type('uuid类型');
 
         return $show;
     }
@@ -141,24 +137,8 @@ class UserController extends Controller
 
         $form->email('email', 'Email');
         $form->mobile('mobile', 'Mobile');
-        $form->password('password', 'Password');
         $form->text('nick_name', 'Nick name');
-        $form->text('title', 'Title');
         $form->image('avatar', 'Avatar');
-        $form->text('point', 'Point');
-        $form->text('coin', 'Coin');
-        $form->text('email_verified', 'Email verified');
-        $form->datetime('login_time', 'Login time')->default(date('Y-m-d H:i:s'));
-        $form->number('login_ip', 'Login ip');
-        $form->text('new_message_num', 'New message num');
-        $form->number('new_notification_num', 'New notification num');
-        $form->text('created_ip', 'Created ip');
-        $form->text('invite_code', 'Invite code');
-        $form->switch('register_type', 'Register type');
-        $form->switch('register_way', 'Register way');
-        $form->text('uuid', 'Uuid');
-        $form->text('uuid_type', 'Uuid type');
-        $form->text('remember_token', 'Remember token');
 
         return $form;
     }
