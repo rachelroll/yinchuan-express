@@ -20,7 +20,10 @@ class InitProject extends Command
      *
      * @var string
      */
-    protected $description = '填充基础数据';
+    protected $description = '初始化: 参数 {name}
+    data(表示填充工厂数据),
+    menu(初始化menu),
+    project(初始化laravel-admin 组件,初始化项目时候使用)';
 
     /**
      * Create a new command instance.
