@@ -44,6 +44,7 @@ class InitProject extends Command
             case 'data':
                 if ($this->confirm('确定要填充你的基础数据吗?原有数据将被覆盖')) {
                     $this->call('db:seed');
+                    $this->initMenu();
                 }
                 break;
             case 'menu':
@@ -53,6 +54,8 @@ class InitProject extends Command
 
                 if ($this->confirm('确定要初始化你的laravel-admin组件吗?')) {
                     $this->initProject();
+                    $this->initMenu();
+                    $this->call('db:seed');
                 }
                 break;
             default:
