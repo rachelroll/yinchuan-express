@@ -12,5 +12,8 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
     $router->resource('users', UserController::class);
+    $router->resource('couriers', CourierController::class);
+    $router->resource('votes', VoteController::class);
+    $router->resource('complaints', ComplaintController::class);
 
 });
