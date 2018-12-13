@@ -22,4 +22,9 @@ class Courier extends Model
             $this->attributes['photos'] = json_encode($photos);
         }
     }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
 }

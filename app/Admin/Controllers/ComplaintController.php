@@ -60,20 +60,6 @@ class ComplaintController extends Controller
     }
 
     /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header('Create')
-            ->description('description')
-            ->body($this->form());
-    }
-
-    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -81,18 +67,21 @@ class ComplaintController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Complaint());
-        $grid->id('Id')->sortable();
-        $grid->info('信息简介');
-        $grid->mobile('联系方式');
-        $grid->date('投诉时间');
-        // 设置text、color、和存储值
-        $states = [
-            'on'  => ['value' => 1, 'text' => '是', 'color' => 'primary'],
-            'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
-        ];
-        $grid->disabled('是否禁用')->switch($states)->sortAble();
 
-        $grid->created_at('Created at')->sortable();
+        $grid->company('投诉公司');
+        $grid->track_no('运单号');
+        $grid->name('投诉人');
+        $grid->mobile('联系方式');
+        $grid->created_at('投诉时间');
+        $grid->status('处理状态');
+        $grid->scheme('选择处理');
+
+        $grid->disableCreateButton();
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            $actions->disableEdit();
+            $actions->disableView();
+        });
 
         return $grid;
     }
@@ -107,60 +96,29 @@ class ComplaintController extends Controller
     {
         $show = new Show(Complaint::findOrFail($id));
 
-        $show->id('Id')->sortable();
-        $show->name('姓名');
-        $show->sex('性别');
-        $show->race('民族');
-        $show->birth('出生日期');
-        $show->political_grade('政治面貌');
-        $show->title('职称');
-        $show->recommendation('推荐单位');
-        $show->mobile('手机号');
-        $show->company('快递公司');
-        $show->years('从业年限');
-        $show->photos('照片')->display(function ($items) {
-            //$items = explode('|', $items);
-            foreach ($items as $item) {
-                return  '< img src="' .$item. ' ">';
+        $show->company('投诉公司');
+        $show->track_no('运单号');
+        $show->name('投诉人');
+        $show->mobile('联系方式');
+        $show->created_at('投诉时间');
+        $show->status('处理状态');
+        $show->solution('处理方案');
+        $show->content('投诉内容');
+        $show->photos('照片')->as(function ($items) {
+            $items = json_decode($items);
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    //$item = env('CDN_DOMAIN').'/'.$item;
+                    $item = 'http://jkwedu-new.oss-cn-beijing.aliyuncs.com/'.$item;
+                    echo  "<img src=\'$item\' class=\'img'\ />";
+                }
             }
+            //return "<img src='$items' class='img' />";
         });
-        $show->video('视频');
+        $show->video('视频')->file();
 
         $show->created_at('Created at')->sortable();
+
         return $show;
-    }
-
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        $form = new Form(new Complaint());
-
-        $form->text('name', "姓名");
-        $form->radio('sex', '性别')->options([1 => '男', 2 => '女'])->default('1');
-        $form->text('race', "民族");
-        $form->date('birth', "出生日期")->format('YYYY-MM-DD');
-        $form->text('political_grade', "政治面貌");
-        $form->text('title', "职称");
-        $form->text('recommendation', "推荐单位");
-        $form->mobile('mobile', '手机号')->options(['mask' => '999 9999 9999']);
-        $form->text('company', '快递公司');
-        $form->number('years', '从业年限(未满一年填0)')->max(20);
-        $form->multipleImage('photos','照片');
-        $form->file('video','视频');
-        $states = [
-            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
-            'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
-        ];
-        $form->switch('status','启用禁用')->states($states);
-
-        $form->saving(function($form) {
-
-        });
-
-        return $form;
     }
 }

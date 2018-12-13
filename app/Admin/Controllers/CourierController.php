@@ -93,7 +93,11 @@ class CourierController extends Controller
         $grid->disabled('是否禁用')->switch($states)->sortAble();
 
         $grid->created_at('Created at')->sortable();
+        $grid->column('投票记录')->display(function () {
+            $url = url("/votes/{$this->id}");
+            return "<a class=\"btn btn-success btn-sm\" href={$url}>投票记录</a>";
 
+        });
         return $grid;
     }
 
@@ -128,10 +132,6 @@ class CourierController extends Controller
                 }
             }
             //return "<img src='$items' class='img' />";
-        });
-
-        $show->contents()->as(function ($content) {
-            return "<pre>{$content}</pre>";
         });
 
         $show->video('视频');
