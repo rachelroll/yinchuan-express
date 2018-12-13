@@ -96,7 +96,6 @@ class CourierController extends Controller
         $grid->column('投票记录')->display(function () {
             $url = url("/votes/{$this->id}");
             return "<a class=\"btn btn-success btn-sm\" href={$url}>投票记录</a>";
-
         });
         return $grid;
     }
