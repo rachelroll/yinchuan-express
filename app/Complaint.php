@@ -26,5 +26,12 @@ class Complaint extends Model
         self::ACTION_TOCOMPANY => '转交企业',
         self::ACTION_FINISHED => '已处理',
         self::ACTION_CLOSED => '投诉完成',
+
     ];
+
+    public function getProcessAttribute()
+    {
+        return $this->status;
+    }
+
 }

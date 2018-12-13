@@ -16,6 +16,7 @@ class ComplaintController extends Controller
 {
     use HasResourceActions;
 
+    private $header = '投诉管理-';
     /**
      * Index interface.
      *
@@ -25,7 +26,7 @@ class ComplaintController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
+            ->header($this->header . 'Index')
             ->description('description')
             ->body($this->grid());
     }
@@ -40,7 +41,7 @@ class ComplaintController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
+            ->header($this->header . 'Detail')
             ->description('description')
             ->body($this->detail($id));
     }
@@ -55,7 +56,7 @@ class ComplaintController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
+            ->header($this->header . 'Edit')
             ->description('description')
             ->body($this->form()->edit($id));
     }
@@ -86,7 +87,15 @@ class ComplaintController extends Controller
                     return Complaint::STATUS[3];
             }
         });
-        $grid->process('选择处理');
+        $grid->process('选择处理')->display(function($process) {
+            if ($process < 3) {
+                return '<a href="'.route('complaint.change',[
+                        'id'=>$this->id,
+                        'status'=>$this->status,
+                    ]).'"><butten class="btn btn-info btn-sm">'. Complaint::PROCESS[$process] .'</butten></a>';
+            }
+
+        });
 
         $grid->actions(function ($actions) {
             // 添加操作
@@ -139,4 +148,18 @@ class ComplaintController extends Controller
 
         return $show;
     }
+
+    public function change()
+    {
+        $id = request('id');
+        $status = request('status');
+        $complaint = Complaint::find($id);
+        $complaint->status = (int)$status + 1;
+        if ($complaint->status <= 3) {
+            $complaint->save();
+        }
+        return back();
+
+    }
+
 }

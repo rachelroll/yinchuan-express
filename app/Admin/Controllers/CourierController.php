@@ -121,15 +121,19 @@ class CourierController extends Controller
         $show->mobile('手机号');
         $show->company('快递公司');
         $show->years('从业年限');
-        $show->photos('照片')->as(function ($items) {
-            $items = json_decode($items);
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    //$item = env('CDN_DOMAIN').'/'.$item;
-                    $item = 'http://jkwedu-new.oss-cn-beijing.aliyuncs.com/'.$item;
-                    echo  "<img src=\'$item\' class=\'img'\ />";
-                }
-            }
+        $show->photos('照片')->setEscape(false)->as(function ($items)  {
+            $items = json_decode($items,1);
+            return collect($items)->filter()->map(function($item) {
+                return '<a href="'.'http://' .env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
+            })->implode('&nbsp;');
+
+            //if (is_array($items)) {
+            //    foreach ($items as $item) {
+            //        $a = env('CDN_DOMAIN').'/'.$item;
+            //        $a = 'http://jkwedu-new.oss-cn-beijing.aliyuncs.com/'.$item;
+            //        return '<img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'. $a .'" />';
+            //    }
+            //}
             //return "<img src='$items' class='img' />";
         });
 
