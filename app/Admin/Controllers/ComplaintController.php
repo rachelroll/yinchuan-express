@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\CheckRow;
 use App\Complaint;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -73,9 +74,26 @@ class ComplaintController extends Controller
         $grid->name('投诉人');
         $grid->mobile('联系方式');
         $grid->created_at('投诉时间');
-        $grid->status('处理状态');
-        $grid->scheme('选择处理');
+        $grid->status('处理状态')->display(function ($status) {
+            switch ($status) {
+                case Complaint::STATUS_UNTREATED:
+                    return Complaint::STATUS[0];
+                case Complaint::STATUS_PROCESSING:
+                    return Complaint::STATUS[1];
+                case Complaint::STATUS_FINISHED:
+                    return Complaint::STATUS[2];
+                case Complaint::STATUS_CLOSED:
+                    return Complaint::STATUS[3];
+            }
+        });
+        $grid->process('选择处理');
 
+        $grid->actions(function ($actions) {
+            // 添加操作
+            $actions->append(new CheckRow($actions->getKey(), '选择处理'));
+        });
+
+        //禁用增加, 删除, 编辑按钮
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {
             $actions->disableDelete();
