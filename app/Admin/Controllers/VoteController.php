@@ -44,34 +44,6 @@ class VoteController extends Controller
             ->body($this->detail($id));
     }
 
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header('Edit')
-            ->description('description')
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header('Create')
-            ->description('description')
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.
@@ -99,5 +71,25 @@ class VoteController extends Controller
         $grid->disableCreateButton();
 
         return $grid;
+    }
+
+    /**
+     * Make a show builder.
+     *
+     * @param mixed $id
+     * @return Show
+     */
+    protected function detail($id)
+    {
+        $show = new Show(Vote::findOrFail($id));
+
+        $show->uid('快递员ID')->sortable();
+        $show->phone('投票人手机号');
+        $show->openId('openId');
+        $show->avatar('头像')->image();
+        $show->nickName('昵称');
+
+        $show->created_at('Created at')->sortable();
+        return $show;
     }
 }
