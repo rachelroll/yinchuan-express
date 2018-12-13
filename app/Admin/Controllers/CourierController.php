@@ -118,12 +118,22 @@ class CourierController extends Controller
         $show->mobile('手机号');
         $show->company('快递公司');
         $show->years('从业年限');
-        $show->photos('照片')->display(function ($items) {
-            //$items = explode('|', $items);
-            foreach ($items as $item) {
-                return  '< img src="' .$item. ' ">';
+        $show->photos('照片')->as(function ($items) {
+            $items = json_decode($items);
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    //$item = env('CDN_DOMAIN').'/'.$item;
+                    $item = 'http://jkwedu-new.oss-cn-beijing.aliyuncs.com/'.$item;
+                    echo  "<img src=\'$item\' class=\'img'\ />";
+                }
             }
+            //return "<img src='$items' class='img' />";
         });
+
+        $show->contents()->as(function ($content) {
+            return "<pre>{$content}</pre>";
+        });
+
         $show->video('视频');
 
         $show->created_at('Created at')->sortable();

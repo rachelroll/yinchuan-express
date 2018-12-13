@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Courier extends Model
 {
-    public function getPhotosAttribute($photos)
-    {
-        if (is_string($photos)) {
-            return json_decode($photos, true);
-        }
-
-        return $photos;
-    }
+    //public function getPhotosAttribute($photos)
+    //{
+    //
+    //    //if (is_string($photos)) {
+    //    //    return json_decode($photos, true);
+    //    //}
+    //
+    //    return $photos;
+    //}
 
     public function setPhotosAttribute($photos)
     {

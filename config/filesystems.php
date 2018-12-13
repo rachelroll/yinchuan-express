@@ -65,6 +65,7 @@ return [
         ],
         'oss' => [
             'driver'     => 'oss',
+            //'root'=>storage_path('app/public'),
             'access_id'  => env('ACCESS_ID',''),
             'access_key' => env('ACCESS_KEY',''),
             'bucket'     => env('BUCKET',''),
