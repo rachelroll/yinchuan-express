@@ -74,7 +74,7 @@ class ComplaintController extends Controller
         $grid->track_no('运单号');
         $grid->name('投诉人');
         $grid->mobile('联系方式');
-        $grid->created_at('投诉时间');
+        $grid->created_at('投诉时间')->sortable();
         $grid->status('处理状态')->display(function ($status) {
             switch ($status) {
                 case Complaint::STATUS_UNTREATED:
@@ -86,8 +86,8 @@ class ComplaintController extends Controller
                 case Complaint::STATUS_CLOSED:
                     return Complaint::STATUS[3];
             }
-        });
-        $grid->process('选择处理')->display(function($process) {
+        })->sortable();
+        $grid->process('处理进度')->display(function($process) {
             if ($process < 3) {
                 return '<a href="'.route('complaint.change',[
                         'id'=>$this->id,
@@ -107,7 +107,6 @@ class ComplaintController extends Controller
         $grid->actions(function ($actions) {
             $actions->disableDelete();
             $actions->disableEdit();
-            $actions->disableView();
         });
 
         return $grid;
@@ -126,25 +125,37 @@ class ComplaintController extends Controller
         $show->company('投诉公司');
         $show->track_no('运单号');
         $show->name('投诉人');
-        $show->mobile('联系方式');
-        $show->created_at('投诉时间');
-        $show->status('处理状态');
-        $show->solution('处理方案');
-        $show->content('投诉内容');
-        $show->photos('照片')->as(function ($items) {
-            $items = json_decode($items);
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    //$item = env('CDN_DOMAIN').'/'.$item;
-                    $item = 'http://jkwedu-new.oss-cn-beijing.aliyuncs.com/'.$item;
-                    echo  "<img src=\'$item\' class=\'img'\ />";
-                }
+        $show->mobil('联系方式');
+        $show->complain_at('投诉时间');
+        $show->status('处理状态')->as(function ($status) {
+            switch ($status) {
+                case Complaint::STATUS_UNTREATED:
+                    return Complaint::STATUS[0];
+                case Complaint::STATUS_PROCESSING:
+                    return Complaint::STATUS[1];
+                case Complaint::STATUS_FINISHED:
+                    return Complaint::STATUS[2];
+                case Complaint::STATUS_CLOSED:
+                    return Complaint::STATUS[3];
             }
-            //return "<img src='$items' class='img' />";
         });
-        $show->video('视频')->file();
+        //$show->solution('处理进度');
+        $show->content('投诉内容');
+        $show->photos('照片')->setEscape(false)->as(function ($items) {
+            $items = json_decode($items,1);
+            return collect($items)->filter()->map(function($item) {
+                return '<a href="'.'http://' .env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
+            })->implode('&nbsp;');
+        });
+        $show->video('视频')->setEscape(false)->as(function ($video) {
+            return '<video src="http://'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
+        });
 
-        $show->created_at('Created at')->sortable();
+        $show->panel()
+            ->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableDelete();
+            });;
 
         return $show;
     }
