@@ -11,18 +11,18 @@ return [
     | login page.
     |
     */
-    'name' => 'Laravel-admin',
+    'name' => '快递系统管理后台',
 
     /*
     |--------------------------------------------------------------------------
-    | Laravel-admin logo
+    | Laravel-admin logo'a
     |--------------------------------------------------------------------------
     |
     | The logo of all admin pages. You can also set it as an image by using a
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Laravel</b> admin',
+    'logo' => '<b>快递系统</b> 管理后台',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>La</b>',
+    'logo-mini' => '<b>快递</b>',
 
     /*
     |--------------------------------------------------------------------------
