@@ -21,7 +21,6 @@ set('keep_releases', 2);
 add('shared_files', []);
 add('shared_dirs', []);
 
-// Writable dirs by web server 
 add('writable_dirs', []);
 
 
@@ -32,7 +31,6 @@ host('oeaudio.com')
     ->stage('staging');
 
 
-    
 // Tasks
 
 task('build', function () {
