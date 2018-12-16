@@ -17,11 +17,10 @@ set('writable_mode', 'chown');
 
 set('keep_releases', 2);
 
-// Shared files/dirs between deploys 
+// Shared files/dirs between deploys
 add('shared_files', []);
 add('shared_dirs', []);
 
-// Writable dirs by web server 
 add('writable_dirs', []);
 
 
@@ -32,7 +31,6 @@ host('oeaudio.com')
     ->stage('staging');
 
 
-    
 // Tasks
 
 task('build', function () {
