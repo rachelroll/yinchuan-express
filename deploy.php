@@ -3,7 +3,7 @@ namespace Deployer;
 
 require 'recipe/laravel.php';
 
-// ÓÊÕşÍ¶Æ±ºóÌ¨-oe·şÎñÆ÷
+// é‚®æ”¿æŠ•ç¥¨åå°-oeæœåŠ¡å™¨
 set('application', 'yinchuan-express');
 
 // Project repository
@@ -21,7 +21,6 @@ set('keep_releases', 2);
 add('shared_files', []);
 add('shared_dirs', []);
 
-// Writable dirs by web server
 add('writable_dirs', []);
 
 
@@ -30,7 +29,6 @@ host('oeaudio.com')
     ->user('root')
     ->set('deploy_path', '/var/www/{{application}}')
     ->stage('staging');
-
 
 
 // Tasks
