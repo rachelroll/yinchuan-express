@@ -14,6 +14,7 @@ class UserController extends Controller
 {
     use HasResourceActions;
 
+    private $header = '用户管理-';
     /**
      * Index interface.
      *
@@ -23,7 +24,7 @@ class UserController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
+            ->header($this->header . 'Index')
             ->description('description')
             ->body($this->grid());
     }
@@ -38,7 +39,7 @@ class UserController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
+            ->header($this->header . 'Detail')
             ->description('description')
             ->body($this->detail($id));
     }
@@ -53,7 +54,7 @@ class UserController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
+            ->header($this->header . 'Edit')
             ->description('description')
             ->body($this->form()->edit($id));
     }
@@ -67,7 +68,7 @@ class UserController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
+            ->header($this->header . 'Create')
             ->description('description')
             ->body($this->form());
     }
@@ -79,13 +80,18 @@ class UserController extends Controller
      */
     protected function grid()
     {
+
         $grid = new Grid(new User);
+        $grid->disableCreateButton();
         $grid->id('Id')->sortable();
         $grid->email('邮箱');
         $grid->mobile('手机号');
         $grid->nick_name('昵称');
-        $grid->avatar('头像')->image('',50);
 
+        $grid->avatar('头像')->lightbox([
+            'zooming' => true,
+            'width' => 50,
+        ]);
         $grid->email_verified('邮箱验证');
         $grid->login_time('登录时间');
         $grid->login_ip('登录IP');
@@ -105,23 +111,13 @@ class UserController extends Controller
         $show = new Show(User::findOrFail($id));
 
         $show->id('Id');
-        $show->email('邮箱');
         $show->mobile('手机号');
-        $show->password('密码');
         $show->name('姓名');
         $show->nick_name('昵称');
-        $show->wechat_name('微信昵称');
-        $show->avatar('头像');
-        $show->email_verified('邮箱验证');
+        $show->avatar('头像')->image();
         $show->login_time('登录时间');
         $show->login_ip('登录IP');
         $show->created_ip('创建IP');
-        $show->invite_code('邀请码');
-        $show->from_user_id('邀请人');
-        $show->register_type('注册来源');
-        $show->register_way('注册设备来源');
-        $show->uuid('Uuid');
-        $show->uuid_type('uuid类型');
 
         return $show;
     }
@@ -135,10 +131,8 @@ class UserController extends Controller
     {
         $form = new Form(new User);
 
-        $form->email('email', 'Email');
+        $form->text('name', '姓名');
         $form->mobile('mobile', 'Mobile');
-        $form->text('nick_name', 'Nick name');
-        $form->image('avatar', 'Avatar');
 
         return $form;
     }

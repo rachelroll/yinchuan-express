@@ -91,7 +91,7 @@ class CourierController extends Controller
 
         $grid->created_at('报名时间')->sortable();
         $grid->column('投票记录')->display(function () {
-            $url = url("/votes/{$this->id}");
+            $url = route('votes.index',['courier_id'=>$this->id]);
             return "<a class=\"btn btn-success btn-sm\" href={$url} target='_blank'>投票记录</a>";
         });
 
