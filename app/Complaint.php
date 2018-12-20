@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Complaint extends Model
 {
+
+    protected $appends = [
+        'process',
+
+    ];
     const STATUS_UNTREATED = 0;
     const STATUS_PROCESSING = 1;
     const STATUS_FINISHED = 2;
