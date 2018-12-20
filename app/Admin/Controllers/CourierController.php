@@ -123,7 +123,9 @@ class CourierController extends Controller
         $show = new Show(Courier::findOrFail($id));
 
         $show->name('参加人员姓名');
-        $show->sex('性别');
+        $show->sex('性别')->as(function ($sex) {
+
+        });
         $show->race('民族');
         $show->birth('出生日期');
         $show->political_grade('政治面貌');

@@ -19,6 +19,7 @@ Route::group([
 
     $router->resource('complaints', ComplaintController::class);
 
-
+    // 与微信交互
+    $router->any('/wechat', 'WeChatController@serve');
 
 });
