@@ -33,6 +33,23 @@ class Complaint extends Model
 
     ];
 
+    const DELAY = 'delay';
+    const BROKEN = 'broken';
+    const LOST = 'lost';
+    const CHANGED = 'changed';
+    const SERVICE = 'service';
+    const OTHERS = 'others';
+
+
+    const TYPE = [
+        self::DELAY => '邮件延误投诉',
+        self::BROKEN => '邮件损毁投诉',
+        self::LOST => '邮件丢失投诉',
+        self::CHANGED => '邮件内件不符投诉',
+        self::SERVICE => '邮件投递服务投诉',
+        self::OTHERS => '其他投诉类'
+    ];
+
     public function getProcessAttribute()
     {
         return $this->status;

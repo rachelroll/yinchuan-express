@@ -75,7 +75,7 @@ class ComplaintController extends Controller
 
         $grid->company('投诉公司');
         $grid->track_no('运单号');
-        $grid->mobile('联系方式');
+        $grid->mobil('联系方式');
         $grid->created_at('投诉时间')->sortable();
         $grid->status('处理状态')->display(function ($status) {
             switch ($status) {
@@ -124,9 +124,9 @@ class ComplaintController extends Controller
 
         $show->company('投诉公司');
         $show->track_no('运单号');
-        $show->name('投诉人');
+        //$show->name('投诉人');
         $show->mobil('联系方式');
-        $show->complain_at('投诉时间');
+        $show->created_at('投诉时间');
         $show->status('处理状态')->as(function ($status) {
             switch ($status) {
                 case Complaint::STATUS_UNTREATED:
@@ -170,51 +170,59 @@ class ComplaintController extends Controller
             $complaint->save();
         }
         $company = $complaint->company;
+        $type = $complaint->type;
+        $type = Complaint::TYPE[ $type ];
         if ($status == 0) {
-            $openid = User::where('enterprise', $company)->first();
-            $this->handleComplaintNotice($openid, $complaint->mobile, $complaint->type, $complaint->complain_at, $complaint->content);
+            $user = User::select(['open_id'])->where('enterprise', $company)->first();
+            if ($user) {
+                $openid = $user->open_id;
+            }else{
+                return '改企业尚未绑定';
+            }
+            $this->handleComplaintNotice($openid, $complaint->mobil, $type, $complaint->created_at, $complaint->content);
         } elseif ($status == 2) {
-            $openid = User::where('enterprise', $company)->first();
-            $this->closeComplaintNotice($openid, $complaint->type, $complaint->content, $complaint->complain_at);
+            $user = User::where('enterprise', $company)->first();
+            $openid = $user->open_id;
+            $this->closeComplaintNotice($openid, $type, $complaint->content, $complaint->created_at);
         }
         return back();
     }
 
-   private function handleComplaintNotice($openid, $key1, $key2, $key3, $key4)
+   private function handleComplaintNotice($openid, $phone, $type, $time, $content)
     {
         Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
         $app = app('wechat.official_account');
         Log::info('1');
-        $app->template_message->setIndustry(13, 14);
+        //$app->template_message->setIndustry(13, 14);
         Log::info('2');
         $app->template_message->send([
             'touser' => $openid,
-            'template_id' => 'SQmG8t1P7XNWsK-7GJ12tXVDaNhnsja8ctk7N0Ua9GM',
+            'template_id' => 'I0SnFsWHK3wkTIAmYghRA45BoTLlxcl1hXZqJRpxa3E',
             'data' => [
-                'key1' => $key1,
-                'key2' => $key2,
-                'key3' => $key3,
-                'key4' => $key4,
+                'phone'   => $phone,
+                'type'    => $type,
+                'time'    => $time,
+                'content' => $content,
             ],
         ]);
         Log::info('3');
     }
 
-    private function closeComplaintNotice($openid, $key1, $key2, $key3)
+    private function closeComplaintNotice($openid, $type, $content, $time)
     {
         Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
 
         $app = app('wechat.official_account');
 
-        $app->template_message->setIndustry(13, 14);
+        //$app->template_message->setIndustry(13, 14);
 
         $app->template_message->send([
-            'touser' => 'oi-uR0ktJyvXx8HP5-5DVHF_kUgQ',
-            'template_id' => 'oeR93ZHiU_fMd21zH9l8XFsa9SyAIQmyajWp-Hw7uxY',
+            'touser' => $openid,
+            'template_id' => 'y1-rpC1einBSaGStbMVJPHiuckNX-POwom9-hmURkQY',
             'data' => [
-                'key1' => $key1, //类型
-                'key2' => $key2, //内容
-                'key3' => $key3, //时间
+                'type' => $type, //类型
+                'content' => $content, //内容
+                'time' => $time, //时间
             ],
         ]);
     }
