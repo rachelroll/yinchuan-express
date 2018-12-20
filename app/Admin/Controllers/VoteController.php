@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Courier;
 use App\Vote;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Controller;
 class VoteController extends Controller
 {
     use HasResourceActions;
+    private $header = '投票记录-';
 
     /**
      * Index interface.
@@ -23,10 +25,11 @@ class VoteController extends Controller
      */
     public function index(Content $content)
     {
+        $id = request('courier_id');
         return $content
-            ->header('Index')
+            ->header($this->header . 'Index')
             ->description('description')
-            ->body($this->grid());
+            ->body($this->grid($id));
     }
 
     /**
@@ -39,7 +42,7 @@ class VoteController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
+            ->header($this->header . 'Detail')
             ->description('description')
             ->body($this->detail($id));
     }
@@ -50,15 +53,18 @@ class VoteController extends Controller
      *
      * @return Grid
      */
-    protected function grid()
+    protected function grid($id=0)
     {
+
         $grid = new Grid(new Vote());
 
-        $grid->id('Id')->sortable();
-        $grid->uid('快递员ID')->sortable();
-        $grid->phone('投票人手机号');
+        $grid->id('ID')->sortable();
+        $grid->courier_id('快递员名称')->display(function($courier_id) {
+            return Courier::find($courier_id)->name;
+        })->sortable();
+        $grid->openId('投票人微信ID');
 
-        $grid->created_at('Created at')->sortable();
+        $grid->created_at('投票时间')->sortable();
 
         // 禁用编辑删除按钮
         $grid->actions(function ($actions) {
@@ -66,6 +72,10 @@ class VoteController extends Controller
             $actions->disableEdit();
             $actions->disableView();
         });
+        if ($id) {
+            $grid->model()->where('courier_id', '=', $id);
+        }
+
 
         //禁用创建按钮
         $grid->disableCreateButton();
@@ -83,8 +93,7 @@ class VoteController extends Controller
     {
         $show = new Show(Vote::findOrFail($id));
 
-        $show->uid('快递员ID')->sortable();
-        $show->phone('投票人手机号');
+        $show->uid('快递员名称')->sortable();
         $show->openId('openId');
         $show->avatar('头像')->image();
         $show->nickName('昵称');
