@@ -142,14 +142,12 @@ class ComplaintController extends Controller
         //$show->solution('处理进度');
         $show->content('投诉内容');
         $show->photos('照片')->setEscape(false)->as(function ($items) {
-            $items = json_decode($items,1);
+            $items = explode('|', $items);
             return collect($items)->filter()->map(function($item) {
                 return '<a href="'.'http://' .env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
             })->implode('&nbsp;');
         });
-        $show->video('视频')->setEscape(false)->as(function ($video) {
-            return '<video src="http://'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
-        });
+        $show->video('视频')->video();
 
         $show->panel()
             ->tools(function ($tools) {
