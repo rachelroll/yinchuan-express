@@ -86,7 +86,13 @@ class CourierController extends Controller
         $grid->name('参加人员姓名');
         $grid->company('所属单位');
         $grid->mobile('联系方式');
-        $grid->years('工龄');
+        $grid->years('工龄')->display(function ($year) {
+            if ($year == 0) {
+                return '不满一年';
+            }else{
+                return $year . '年';
+            }
+        });
         $grid->recommendation('推荐单位');
 
         $grid->created_at('报名时间')->sortable();
@@ -124,27 +130,38 @@ class CourierController extends Controller
 
         $show->name('参加人员姓名');
         $show->sex('性别')->as(function ($sex) {
-
+            if ($sex == 1) {
+                return '男';
+            }else{
+                return '女';
+            }
         });
         $show->race('民族');
-        $show->birth('出生日期');
+        //$show->birth('出生日期');
         $show->political_grade('政治面貌');
         $show->title('职称');
         $show->recommendation('推荐单位');
         $show->mobile('联系方式');
         $show->company('所属单位');
-        $show->years('工龄');
+        $show->years('工龄')->as(function ($year) {
+            if ($year == 0) {
+                return '不满一年';
+            }else{
+                return $year . '年';
+            }
+        });
         $show->photos('照片')->setEscape(false)->as(function ($items)  {
-            $items = json_decode($items,1);
+            //$items = json_decode($items,1);
+            $items = explode('|', $items);
             return collect($items)->filter()->map(function($item) {
                 return '<a href="'.'http://' .env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
             })->implode('&nbsp;');
         });
 
-        $show->video('视频')->as(function ($video) {
-            return '<video src="http://'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
-        });
-
+        //$show->video('视频')->setEscape(false)->as(function ($video) {
+        //    return '<video src="http://'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
+        //});
+        $show->video('视频')->video();
         return $show;
     }
 
