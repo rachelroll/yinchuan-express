@@ -93,7 +93,15 @@ class CourierController extends Controller
                 return $year . '年';
             }
         });
-        $grid->recommendation('推荐单位');
+        $grid->recommendation('推荐方式')->display(function ($way) {
+            if ($way == 0) {
+                return '个人自荐';
+            } elseif ($way == 1) {
+                return '消费者推荐';
+            }else{
+                return '单位推荐';
+            }
+        });
 
         $grid->created_at('报名时间')->sortable();
         $grid->column('投票记录')->display(function () {
@@ -126,7 +134,7 @@ class CourierController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Courier::findOrFail($id));
+        $show = new Show($courier = Courier::findOrFail($id));
 
         $show->name('参加人员姓名');
         $show->sex('性别')->as(function ($sex) {
@@ -140,7 +148,23 @@ class CourierController extends Controller
         //$show->birth('出生日期');
         $show->political_grade('政治面貌');
         $show->title('职称');
-        $show->recommendation('推荐单位');
+        $show->recommendation('推荐方式')->as(function ($way) {
+            if ($way == 0) {
+                return '个人自荐';
+            } elseif ($way == 1) {
+                return '消费者推荐';
+            }else{
+                return '单位推荐';
+            }
+        });
+        if ($courier->recommendation == 1) {
+            $show->recommender('推荐人姓名');
+            $show->recommender_phone('推荐人联系方式');
+        }
+        if ($courier->recommendation == 2) {
+            $show->recommend_company('推荐单位名称');
+        }
+
         $show->mobile('联系方式');
         $show->company('所属单位');
         $show->years('工龄')->as(function ($year) {

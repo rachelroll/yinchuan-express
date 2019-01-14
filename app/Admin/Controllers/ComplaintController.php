@@ -124,7 +124,7 @@ class ComplaintController extends Controller
 
         $show->company('投诉公司');
         $show->track_no('运单号');
-        //$show->name('投诉人');
+        $show->name('投诉人');
         $show->mobil('联系方式');
         $show->created_at('投诉时间');
         $show->status('处理状态')->as(function ($status) {
