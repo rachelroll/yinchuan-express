@@ -198,16 +198,16 @@ class CourierController extends Controller
     {
         $form = new Form(new Courier);
 
-        $form->text('name', "参加人员姓名");
-        $form->radio('sex', '性别')->options([1 => '男', 2 => '女'])->default('1');
-        $form->text('race', "民族");
-        $form->date('birth', "出生日期")->format('YYYY-MM-DD');
-        $form->text('political_grade', "政治面貌");
-        $form->text('title', "职称");
-        $form->text('recommendation', "推荐单位");
-        $form->mobile('mobile', '联系方式')->options(['mask' => '999 9999 9999']);
-        $form->text('company', '所属单位');
-        $form->number('years', '工龄(未满一年填0)')->max(20);
+        $form->text('name', "参加人员姓名")->rules(['required',['required'=>'必填项']]);
+        $form->radio('sex', '性别')->options([1 => '男', 2 => '女'])->default('1')->rules(['required',['required'=>'必填项']]);
+        $form->text('race', "民族")->rules(['required',['required'=>'必填项']]);
+        $form->date('birth', "出生日期")->format('YYYY-MM-DD')->rules(['required',['required'=>'必填项']]);
+        $form->text('political_grade', "政治面貌")->rules(['required',['required'=>'必填项']]);
+        $form->text('title', "职称")->rules(['required',['required'=>'必填项']]);
+        $form->text('recommendation', "推荐单位")->rules(['required',['required'=>'必填项']]);
+        $form->mobile('mobile', '联系方式')->options(['mask' => '999 9999 9999'])->rules(['required',['required'=>'必填项']]);
+        $form->text('company', '所属单位')->rules(['required',['required'=>'必填项']]);
+        $form->number('years', '工龄(未满一年填0)')->max(20)->rules(['required',['required'=>'必填项']]);
         $form->multipleImage('photos','照片');
         $form->file('video','视频');
         $states = [
