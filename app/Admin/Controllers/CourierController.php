@@ -178,7 +178,7 @@ class CourierController extends Controller
         //$show->multipleImage('photos','照片');
         $show->photos('照片')->setEscape(false)->as(function ($items)  {
             return collect($items)->filter()->map(function($item) {
-                return '<a href="'.env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
+                return '<a target="_blank" href="'.env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.env('CDN_DOMAIN').'/'.$item .'" /></a>';
             })->implode('&nbsp;');
         });
 
