@@ -109,6 +109,7 @@ class CourierController extends Controller
             return "<a class=\"btn btn-success btn-sm\" href={$url} target='_blank'>投票记录</a>";
         });
 
+
         // 设置text、color、和存储值
         $states = [
             'on'  => ['value' => 1, 'text' => '通过', 'color' => 'primary'],
@@ -174,18 +175,18 @@ class CourierController extends Controller
                 return $year . '年';
             }
         });
+        //$show->multipleImage('photos','照片');
         $show->photos('照片')->setEscape(false)->as(function ($items)  {
-            //$items = json_decode($items,1);
-            $items = explode('|', $items);
             return collect($items)->filter()->map(function($item) {
-                return '<a href="'.'http://' .env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
+                return '<a href="'.env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.'http://' .env('CDN_DOMAIN').'/'.$item .'" /></a>';
             })->implode('&nbsp;');
         });
 
-        //$show->video('视频')->setEscape(false)->as(function ($video) {
-        //    return '<video src="http://'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
-        //});
-        $show->video('视频')->video();
+        $show->video('视频')->setEscape(false)->as(function ($video) {
+            return '<video width="400" src="'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
+        });
+        //$show->video('视频')->video();
+
         return $show;
     }
 
@@ -199,7 +200,7 @@ class CourierController extends Controller
         $form = new Form(new Courier);
 
         $form->text('name', "参加人员姓名")->rules(['required',['required'=>'必填项']]);
-        $form->radio('sex', '性别')->options([1 => '男', 2 => '女'])->default('1')->rules(['required',['required'=>'必填项']]);
+        $form->radio('sex', '性别')->options([0 => '未知',1 => '男', 2 => '女'])->default(0);
         $form->text('race', "民族")->rules(['required',['required'=>'必填项']]);
         $form->date('birth', "出生日期")->format('YYYY-MM-DD')->rules(['required',['required'=>'必填项']]);
         $form->text('political_grade', "政治面貌")->rules(['required',['required'=>'必填项']]);
