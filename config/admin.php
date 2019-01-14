@@ -320,6 +320,10 @@ return [
         'light-box' => [
             // Set to `false` if you want to disable this extension
             'enable' => true,
+        ],
+        'media-player' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
         ]
     ],
 ];
