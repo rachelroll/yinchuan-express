@@ -6,18 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Courier extends Model
 {
-    //public function getPhotosAttribute($photos)
-    //{
-    //
-    //    //if (is_string($photos)) {
-    //    //    return json_decode($photos, true);
-    //    //}
-    //
-    //    return $photos;
-    //}
+
+    public function getPhotosAttribute($photos)
+    {
+        return json_decode($photos, true);
+    }
 
     public function setPhotosAttribute($photos)
     {
+        \Log::info(json_encode($photos));
         if (is_array($photos)) {
             $this->attributes['photos'] = json_encode($photos);
         }
@@ -25,6 +22,7 @@ class Courier extends Model
 
     public function votes()
     {
+
         return $this->hasMany(Vote::class);
     }
 }
