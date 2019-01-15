@@ -175,7 +175,6 @@ class CourierController extends Controller
                 return $year . '年';
             }
         });
-        //$show->multipleImage('photos','照片');
         $show->photos('照片')->setEscape(false)->as(function ($items)  {
             return collect($items)->filter()->map(function($item) {
                 return '<a target="_blank" href="'.env('CDN_DOMAIN').'/'.$item.'" > <img  style="margin: 0 5px;max-width:200px;max-height:200px" class="img" src="'.env('CDN_DOMAIN').'/'.$item .'" /></a>';
@@ -183,7 +182,10 @@ class CourierController extends Controller
         });
 
         $show->video('视频')->setEscape(false)->as(function ($video) {
-            return '<video width="400" src="'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
+            if ($video) {
+                return '<video width="400" src="'.env('CDN_DOMAIN').'/'.$video.'" controls="controls">您的浏览器不支持 video。</video>';
+            }
+            return '没有相关视频';
         });
         //$show->video('视频')->video();
 

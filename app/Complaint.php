@@ -10,6 +10,12 @@ class Complaint extends Model
         'process',
     ];
 
+    protected $casts = [
+        'photos' => 'array',
+    ];
+
+
+
     const STATUS_UNTREATED = 0;
     const STATUS_PROCESSING = 1;
     const STATUS_FINISHED = 2;
