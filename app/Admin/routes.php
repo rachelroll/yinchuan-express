@@ -15,6 +15,8 @@ Route::group([
     $router->resource('couriers', CourierController::class);
     $router->resource('votes', VoteController::class);
     $router->resource('banners', BannerController::class);
+    $router->resource('companies', CompanyController::class);
+    $router->resource('advise', AdviseController::class);
 
     $router->get('/complaint/change', 'ComplaintController@change')->name('complaint.change');
 

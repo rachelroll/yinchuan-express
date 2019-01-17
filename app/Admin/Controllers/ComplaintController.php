@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\CheckRow;
+use App\Company;
 use App\Complaint;
 use App\User;
 use EasyWeChatComposer\EasyWeChat;
@@ -169,25 +170,31 @@ class ComplaintController extends Controller
         $status = request('status');
         $complaint = Complaint::find($id);
         $complaint->status = (int)$status + 1;
+
+        $company = $complaint->company;
+        $company_model = Company::where('company_name',$company)->first();
+        if (!$company_model) {
+            admin_toastr('没有找到相关企业,请在左侧企业管理中创建企业', 'error');
+            return back();
+        }
+
+        if (!$openid = $company_model->open_id) {
+            admin_toastr('请先绑定企业负责人微信ID', 'error');
+            return back();
+        }
+
+        $type = $complaint->type;
+        $type = Complaint::TYPE[ $type ];
+        //todo
+        //if ($status == 0) {
+        //    $this->handleComplaintNotice($openid, $complaint->mobil, $type, $complaint->created_at, $complaint->content);
+        //} elseif ($status == 2) {
+        //    $this->closeComplaintNotice($openid, $type, $complaint->content, $complaint->created_at);
+        //}
         if ($complaint->status <= 3) {
             $complaint->save();
         }
-        $company = $complaint->company;
-        $type = $complaint->type;
-        $type = Complaint::TYPE[ $type ];
-        if ($status == 0) {
-            $user = User::select(['open_id'])->where('enterprise', $company)->first();
-            if ($user) {
-                $openid = $user->open_id;
-            }else{
-                return '改企业尚未绑定';
-            }
-            $this->handleComplaintNotice($openid, $complaint->mobil, $type, $complaint->created_at, $complaint->content);
-        } elseif ($status == 2) {
-            $user = User::where('enterprise', $company)->first();
-            $openid = $user->open_id;
-            $this->closeComplaintNotice($openid, $type, $complaint->content, $complaint->created_at);
-        }
+        admin_toastr('处理成功', 'success');
         return back();
     }
 
