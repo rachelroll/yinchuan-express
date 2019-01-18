@@ -82,10 +82,22 @@ class UserController extends Controller
     {
 
         $grid = new Grid(new User);
+
+        $grid->filter(function($filter){
+            $filter->expand();
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('nick_name', '昵称');
+            $filter->like('mobile', '手机号');
+
+        });
+        
         $grid->disableCreateButton();
         $grid->id('Id')->sortable();
         $grid->email('邮箱');
         $grid->mobile('手机号');
+        $grid->open_id('微信ID');
         $grid->nick_name('昵称');
 
         $grid->avatar('头像')->lightbox([
