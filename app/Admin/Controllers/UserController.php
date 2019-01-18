@@ -98,7 +98,7 @@ class UserController extends Controller
         $grid->email('邮箱');
         $grid->mobile('手机号');
         $grid->open_id('微信ID');
-        $grid->nick_name('昵称');
+        $grid->nick_name('微信昵称');
 
         $grid->avatar('头像')->lightbox([
             'zooming' => true,
